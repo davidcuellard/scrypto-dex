@@ -1,0 +1,46 @@
+# Instructions for locking fee
+CALL_METHOD 
+    Address("${account_add}") #Primary account
+    "lock_fee"
+    Decimal("10");
+
+# Withdraw XRD from primary account
+CALL_METHOD
+    Address("${account_add}") #Primary account 
+    "withdraw"
+    Address("${xrd_add}") # XRD address
+    Decimal("2500");
+
+# Put the XRD from worktop into bucket_a
+TAKE_FROM_WORKTOP 
+    Address("${xrd_add}") # XRD address
+    Decimal("2500") 
+    Bucket("bucket_a");
+
+# Withdraw BTC from primary account
+CALL_METHOD
+    Address("${account_add}") #Primary account 
+    "withdraw"
+    Address("${btc_add}") # BTC address
+    Decimal("1500");
+    
+# Put the BTC from worktop into bucket_b
+TAKE_FROM_WORKTOP
+    Address("${btc_add}") # BTC address
+    Decimal("1500")
+    Bucket("bucket_b");
+
+# Call add liquidity method
+CALL_METHOD 
+    Address("${component_add}") # Component_address
+    "add_liquidity" # "method_name"
+    Bucket("bucket_a")
+    Bucket("bucket_b");
+
+# Because we withdrew tokens from our account and they could still be on the
+# worktop, we have to deposit them back into your account
+CALL_METHOD
+    Address("${account_add}") #Primary account
+    "deposit_batch"
+    Expression("ENTIRE_WORKTOP");
+

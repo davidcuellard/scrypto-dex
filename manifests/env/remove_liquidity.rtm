@@ -1,0 +1,32 @@
+# Instructions for locking fee
+CALL_METHOD 
+    Address("${account_add}") # Account
+    "lock_fee"
+    Decimal("10");
+
+# Withdraw Pool Units token from primary account
+CALL_METHOD
+    Address("${account_add}") # Account
+    "withdraw"
+    Address("resource_sim1t4ampa9dk27t7y3d67pcvpkhv3e77jgehngwv7rnhga4escazk6s42") # Pool Unit address
+    Decimal("100");
+    
+# Put the Pool Units token from worktop into bucket_a
+TAKE_FROM_WORKTOP
+    Address("resource_sim1t4ampa9dk27t7y3d67pcvpkhv3e77jgehngwv7rnhga4escazk6s42") # BTC address
+    Decimal("100")
+    Bucket("bucket_a");
+
+# Call add liquidity method
+CALL_METHOD 
+    Address("${component_add}") # Component_address
+    "remove_liquidity" # "method_name"
+    Bucket("bucket_a");
+
+# Because we withdrew tokens from our account and they could still be on the
+# worktop, we have to deposit them back into your account
+CALL_METHOD
+    Address("${account_add}") # Account
+    "deposit_batch"
+    Expression("ENTIRE_WORKTOP");
+
