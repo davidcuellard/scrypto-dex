@@ -76,7 +76,7 @@ resim run manifests/env/get_price.rtm
 
 ### Automatic scrypt
 
-It iss also possible to run all the commands above using the following scrypt:
+It iss also possible to run all the commands above using the following shell script:
 
 ```bash
 source setup.sh
