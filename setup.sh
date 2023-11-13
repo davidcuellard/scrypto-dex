@@ -1,0 +1,14 @@
+clear
+resim reset
+resim new-account
+resim new-token-fixed --name Bitcoin --symbol BTC 21000000
+resim publish .
+
+export account_add=account_sim1c956qr3kxlgypxwst89j9yf24tjc7zxd4up38x37zr6q4jxdx9rhma
+export xrd_add=resource_sim1tknxxxxxxxxxradxrdxxxxxxxxx009923554798xxxxxxxxxakj8n3
+export btc_add=resource_sim1t4kwg8fa7ldhwh8exe5w4acjhp9v982svmxp3yqa8ncruad4pf6m22
+export package_add=package_sim1ph6xspj0xlmspjju2asxg7xnucy7tk387fufs4jrfwsvt85wvqf70a
+
+resim run manifests/env/instantiate.rtm
+
+export component_add=component_sim1cr4tavjnaanmyj9t658rvzrslrlfwhuc96fzj4mnj2c8xnuzenqnzf

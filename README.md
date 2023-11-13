@@ -5,6 +5,8 @@ Based on Scrypto101: https://academy.radixdlt.com/course/scrypto101
 
 ## To run this project
 
+### Manually:
+
 In the project directory, you can run:
 
 - Reset simulator
@@ -36,20 +38,16 @@ export btc_add=resource_sim1t4kwg8fa7ldhwh8exe5w4acjhp9v982svmxp3yqa8ncruad4pf6m
 export package_add=package_sim1ph6xspj0xlmspjju2asxg7xnucy7tk387fufs4jrfwsvt85wvqf70a
 ```
 
-- Call function
-``` bash
-resim call-function <PACKAGE_ADDRESS> <BLUEPRINT_NAME> <FUNCTION_NAME>
-```
-
-Save component address to another environment variable. For example:
-``` bash
-export component_add=component_sim1cr4tavjnaanmyj9t658rvzrslrlfwhuc96fzj4mnj2c8xnuzenqnzf
-```
-
 - Instatiate the blueprint
 
 ``` bash
 resim run manifests/env/instantiate.rtm
+```
+
+
+Save component address to another environment variable. For example:
+``` bash
+export component_add=component_sim1cr4tavjnaanmyj9t658rvzrslrlfwhuc96fzj4mnj2c8xnuzenqnzf
 ```
 
 - Add liquidity
@@ -68,6 +66,20 @@ resim run manifests/env/remove_liquidity.rtm
 
 ``` bash
 resim run manifests/env/swap.rtm
+```
+
+- check price
+
+``` bash
+resim run manifests/env/get_price.rtm
+```
+
+### Automatic scrypt
+
+It iss also possible to run all the commands above using the following scrypt:
+
+```bash
+source setup.sh
 ```
 
 

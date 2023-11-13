@@ -9,12 +9,12 @@ CALL_METHOD
     Address("${account_add}") #Primary account
     "withdraw"
     Address("${xrd_add}") # XRD address
-    Decimal("1000");
+    Decimal("2000");
 
 # Put the XRD from worktop into bucket_a
 TAKE_FROM_WORKTOP 
     Address("${xrd_add}") # XRD address
-    Decimal("1000") 
+    Decimal("2000") 
     Bucket("bucket_a");
 
 # Withdraw BTC from primary account
@@ -22,12 +22,12 @@ CALL_METHOD
     Address("${account_add}") #Primary account
     "withdraw"
     Address("${btc_add}") # BTC address
-    Decimal("1000");
+    Decimal("50");
 
 # Put the BTC from worktop into bucket_b
 TAKE_FROM_WORKTOP
     Address("${btc_add}") # BTC address
-    Decimal("1000")
+    Decimal("50")
     Bucket("bucket_b");
 
 # Call instantiate funtion

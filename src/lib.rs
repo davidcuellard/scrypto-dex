@@ -3,6 +3,19 @@ use scrypto::prelude::*;
 #[blueprint]
 mod scryptodex_module {
 
+    //Create access rules
+    enable_method_auth! {
+        roles {
+            admin => updatable_by: [OWNER];
+         },
+        methods {
+            swap => PUBLIC;
+            add_liquidity => PUBLIC;
+            remove_liquidity => PUBLIC;
+            get_price => restrict_to: [admin, OWNER];
+        }
+    }
+
     struct ScryptoDex {
         vault_a: FungibleVault,
         vault_b: FungibleVault,
@@ -16,11 +29,11 @@ mod scryptodex_module {
             bucket_a: FungibleBucket,
             bucket_b: FungibleBucket,
             fee: Decimal,
-        ) -> (Global<ScryptoDex>, FungibleBucket){
+        ) -> (Global<ScryptoDex>, FungibleBucket, FungibleBucket){
 
             assert!(!bucket_a.is_empty() && !bucket_b.is_empty(), "You must pass in an initial supply of each token");
 
-            assert!(fee >= dec!(0) && fee <= dec!(1), "Invalid fee in thousandths");
+            assert!(fee >= dec!(0) && fee <= dec!(1), "Fee must be between 0 and 1");
 
             let (address_reservation, component_address) = 
                 Runtime::allocate_component_address(ScryptoDex::blueprint_id());
@@ -42,6 +55,13 @@ mod scryptodex_module {
                 ))
                 .mint_initial_supply(100);
 
+            // Create Admin badge
+            // Owner role updatable by Owner
+            let admin_badge = ResourceBuilder::new_fungible(OwnerRole::None)
+                .metadata(metadata!(init{"name"=>"admin badge", locked;}))
+                .divisibility(DIVISIBILITY_NONE)
+                .mint_initial_supply(1);
+
             let scryptodex = Self{
                 vault_a: FungibleVault::with_bucket(bucket_a),
                 vault_b: FungibleVault::with_bucket(bucket_b),
@@ -49,11 +69,16 @@ mod scryptodex_module {
                 fee: fee,
             }
             .instantiate()
-            .prepare_to_globalize(OwnerRole::None)
+            .prepare_to_globalize(
+                OwnerRole::Fixed(rule!(require(admin_badge.resource_address())))
+            )
+            .roles(roles!( 
+                admin => rule!(require(admin_badge.resource_address())); 
+            ))
             .with_address(address_reservation)
             .globalize();
 
-            (scryptodex, pool_units)
+            (scryptodex, pool_units, admin_badge)
         }
 
         pub fn swap(&mut self, input_tokens: FungibleBucket) -> FungibleBucket{
@@ -168,6 +193,60 @@ mod scryptodex_module {
             )
         }
 
+        pub fn get_price(&mut self) {      
+
+            // let (mut name_a, mut name_b): (&str, &str) = 
+            // if self.vault_a.resource_address() ==  resource_address("resource_sim1tknxxxxxxxxxradxrdxxxxxxxxx009923554798xxxxxxxxxakj8n3")
+            //     && self.vault_b.resource_address() == "resource_sim1t4kwg8fa7ldhwh8exe5w4acjhp9v982svmxp3yqa8ncruad4pf6m22"
+            // {
+            //     ("XRD", "BTC")
+            // } else if self.vault_b.resource_address() == "resource_sim1tknxxxxxxxxxradxrdxxxxxxxxx009923554798xxxxxxxxxakj8n3"
+            // && self.vault_a.resource_address() == "resource_sim1t4kwg8fa7ldhwh8exe5w4acjhp9v982svmxp3yqa8ncruad4pf6m22"
+            // {
+            //     ("BTC", "XRD")
+            // } else {
+            //     panic!("One of the tokens does not belong to the pool!")
+            // };        
+
+            
+            // sys_bech32_encode_address( "resource_sim1tknxxxxxxxxxradxrdxxxxxxxxx009923554798xxxxxxxxxakj8n3" )
+
+            // ComponentAddress::try_from_bech32(self.vault_a.resource_address(), str);
+
+            // ResourceManager::from_address("resource_sim1nfq8ezgchvcph978k2kn5v74rggeyh9nxqmley9a2pqjygfcua05sg");
+
+            // info!("Resource type: {}", self.vault_a );
+
+
+            // Get vault's symbol
+            let _symbol_a: String = ResourceManager::from_address(self.vault_a.resource_address()).get_metadata::<&str, String>("symbol").unwrap().unwrap().into();
+            let _symbol_b: String = ResourceManager::from_address(self.vault_b.resource_address()).get_metadata::<&str, String>("symbol").unwrap().unwrap().into();
+
+
+            info!(
+                "LP {} vault quantity: {} ", 
+                _symbol_a,
+                self.vault_a.amount()
+            );
+
+            info!(
+                "LP {} vault quantity: {} ", 
+                _symbol_b, 
+                self.vault_b.amount()
+            );
+
+            info!(
+                "Price {}/{}: {} ", 
+                _symbol_a, 
+                _symbol_b, 
+                self.vault_a.amount() / self.vault_b.amount()
+            );
+
+            info!(
+                "LP total supply: {} ", 
+                self.pool_units_resource_manager.total_supply().unwrap()
+            );
+        }
+
     }
-    
 }
