@@ -8,13 +8,13 @@ CALL_METHOD
 CALL_METHOD
     Address("${account_add}") # Account
     "withdraw"
-    Address("resource_sim1t4ampa9dk27t7y3d67pcvpkhv3e77jgehngwv7rnhga4escazk6s42") # Pool Unit address
+    Address("${lp_add}") # Pool Unit address
     Decimal("100");
     
 # Put the Pool Units token from worktop into bucket_a
 TAKE_FROM_WORKTOP
-    Address("resource_sim1t4ampa9dk27t7y3d67pcvpkhv3e77jgehngwv7rnhga4escazk6s42") # BTC address
-    Decimal("100")
+    Address("${lp_add}") # Pool Unit address
+    Decimal("10")
     Bucket("bucket_a");
 
 # Call add liquidity method

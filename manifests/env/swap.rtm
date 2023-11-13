@@ -9,12 +9,12 @@ CALL_METHOD
     Address("${account_add}") # Account
     "withdraw"
     Address("${btc_add}") # BTC address
-    Decimal("1000");
+    Decimal("120");
     
 # Put the BTC from worktop into bucket_a
 TAKE_FROM_WORKTOP
     Address("${btc_add}") # BTC address
-    Decimal("1000")
+    Decimal("120")
     Bucket("bucket_a");
 
 # Call add liquidity method

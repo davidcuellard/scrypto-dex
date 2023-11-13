@@ -4,13 +4,14 @@ CALL_METHOD
     "lock_fee"
     Decimal("10");
 
-## Create a proof of a badge on your account. The "create_proof_of_amount" method returns a Proof to the authzone.
+# Create a proof of a badge on your account. The "create_proof_of_amount" method returns a Proof to the authzone.
 CALL_METHOD
     Address("${account_add}") # Account
     "create_proof_of_amount" # Create proof of amount
-    Address("resource_sim1t4kzjvl3pvcpe7aqvykkdqgjjl45gsdkp86ajvatq9y77sg4qwjl5g") # admin badge address
+    Address("${admin_add}") # admin badge address
     Decimal("1");
 
+# Call the get price method
 CALL_METHOD
     Address("${component_add}") # Component_address
     "get_price"; # "method_name"
